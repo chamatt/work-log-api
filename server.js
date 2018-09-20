@@ -7,12 +7,12 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// // DB Config and Connection
-// const db = require("./config/keys").mongoURI;
-// mongoose
-//   .connect(db)
-//   .then(() => console.log("MongoDB Connected"))
-//   .catch(() => console.log(err));
+// DB Config and Connection
+const db = require("./config/keys").mongoURI;
+mongoose
+  .connect(db)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(() => console.log(err));
 
 // Routes
 // To be added
