@@ -27,7 +27,6 @@ const UserSchema = new Schema({
   },
   loggedAt: {
     type: Date,
-    required: true,
     default: Date.now
   },
   admin: {

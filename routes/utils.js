@@ -4,7 +4,7 @@ const removePassword = user => {
   return user;
 };
 const removePasswordArray = users => {
-  users.map(user => removePassword(user));
+  return users.map(user => removePassword(user));
 };
 
 module.exports = { removePassword, removePasswordArray };

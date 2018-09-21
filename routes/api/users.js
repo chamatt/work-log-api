@@ -17,6 +17,7 @@ const isEmpty = value => {
 };
 
 const { AdminAuthenticate } = require("../middlewares.js");
+const utils = require("../utils");
 
 // @route  POST api/users/register
 // @desc   Create new user
@@ -64,8 +65,11 @@ router.post("/register", (req, res) => {
   });
 });
 
+// @route  POST api/users/register/admin
+// @desc   Create new admin user
+// @access Public
 router.post(
-  "/admin",
+  "/register/admin",
   passport.authenticate("jwt", { session: false }),
   AdminAuthenticate,
   (req, res) => {
@@ -136,20 +140,22 @@ router.post("/login", (req, res) => {
           email: user.email,
           admin: user.admin
         }; // JWT Payload
-
-        jwt.sign(
-          payload,
-          keys.secretOrKey,
-          { expiresIn: 86400 },
-          (err, token) => {
-            res.json({
-              sucess: true,
-              token: "Bearer " + token
-            });
-          }
-        );
-        user.loggedAt = Date.now;
-        user.save();
+        User.findOneAndUpdate(
+          { email },
+          { $set: { loggedAt: Date.now() } }
+        ).then(() => {
+          jwt.sign(
+            payload,
+            keys.secretOrKey,
+            { expiresIn: 86400 },
+            (err, token) => {
+              res.json({
+                sucess: true,
+                token: "Bearer " + token
+              });
+            }
+          );
+        });
       } else {
         errors.password = "Password Incorrect";
         return res.status(400).json(errors);
@@ -178,15 +184,36 @@ router.get(
 // @route  GET api/users/all
 // @desc   Return all users
 // @access Admin
-router.get("/all", (req, res) => {
-  const { query } = req;
-  User.findOne()
-    .then(users => {
-      const filteredUsers = removePasswordArray(users);
-      console.log(quecaralho);
-      res.json(users);
-    })
-    .catch(err => res.json(err));
-});
+router.get(
+  "/all",
+  passport.authenticate("jwt", { session: false }),
+  AdminAuthenticate,
+  (req, res) => {
+    const { query } = req;
+    User.find(query)
+      .then(users => {
+        const filteredUsers = utils.removePasswordArray(users);
+        res.json(filteredUsers);
+      })
+      .catch(err => res.json(err));
+  }
+);
+
+// @route  GET api/users/:id
+// @desc   Return specified user
+// @access Admin
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  AdminAuthenticate,
+  (req, res) => {
+    User.findById(req.params.id)
+      .then(user => {
+        const filteredUser = utils.removePassword(user);
+        res.json(filteredUser);
+      })
+      .catch(err => res.json(err));
+  }
+);
 
 module.exports = router;
