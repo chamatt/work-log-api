@@ -4,6 +4,10 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const app = express();
 
+const users = require("./routes/api/users");
+const activities = require("./routes/api/activities");
+const categories = require("./routes/api/categories");
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -14,8 +18,9 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch(() => console.log(err));
 
-// Routes
-// To be added
+// Passport Config
+app.use(passport.initialize());
+require("./config/passport")(passport);
 
 // Entry point
 app.get("/api", (req, res) => {
@@ -26,6 +31,10 @@ app.get("/api", (req, res) => {
   });
 });
 
+// Routes
+app.use("/api/categories", categories);
+
+// Start app
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log("Server running on port " + port);
