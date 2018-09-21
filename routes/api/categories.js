@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
-
 const Category = require("../../models/Category");
+
+const { AdminAuthenticate } = require("../middlewares.js");
 
 // @route  GET api/categories
 // @desc   Get all categories
@@ -27,6 +28,7 @@ router.get(
 router.post(
   "/",
   //passport.authenticate("jwt", { session: false }),
+  AdminAuthenticate,
   (req, res) => {
     Category.find({ name: req.body.name })
       .then(cats => {
@@ -71,6 +73,7 @@ router.delete(
 router.put(
   "/:id",
   //passport.authenticate("jwt", { session: false }),
+  AdminAuthenticate,
   (req, res) => {
     Category.findOneAndUpdate(
       { _id: req.params.id },

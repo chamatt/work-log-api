@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  full_name: {
+  fullName: {
     type: String,
     required: true
   },
@@ -21,27 +21,26 @@ const UserSchema = new Schema({
   avatar: {
     type: String
   },
-  created_at: {
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  loggedAt: {
     type: Date,
     required: true,
     default: Date.now
   },
-  logged_at: {
-    type: Date,
-    required: true,
-    default: Date.now
+  admin: {
+    type: Boolean,
+    default: false
   },
-  permission: {
-    type: Number,
-    required: true
-  },
-  birth_date: {
+  birthdate: {
     type: Date,
     required: true
   },
   phone: {
-    type: Number,
-    required: true
+    type: String,
+    default: "(99)99999-9999"
   }
 });
 
