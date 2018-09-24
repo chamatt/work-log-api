@@ -34,6 +34,7 @@ app.get("/api", (req, res) => {
 // Routes
 app.use("/api/categories", categories);
 app.use("/api/users", users);
+app.use("/api/activities", activities);
 
 // Start app
 const port = process.env.PORT || 3001;

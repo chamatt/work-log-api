@@ -2,12 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ActivitySchema = new Schema({
-  date_start: {
+  date: {
     type: Date,
     required: true
-  },
-  date_end: {
-    type: Date
   },
   length: {
     type: Date,

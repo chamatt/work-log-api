@@ -1,6 +1,6 @@
 const removePassword = user => {
-  const removeIndex = Object.keys(user).indexOf("password");
-  if (removeIndex != -1) user.splice(removeIndex, 1);
+  delete user["password"];
+  delete user._doc["password"];
   return user;
 };
 const removePasswordArray = users => {
