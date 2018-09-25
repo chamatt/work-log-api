@@ -16,7 +16,7 @@ const db = require("./config/keys").mongoURI;
 mongoose
   .connect(db)
   .then(() => console.log("MongoDB Connected"))
-  .catch(() => console.log(err));
+  .catch(err => console.log(err));
 
 // Passport Config
 app.use(passport.initialize());

@@ -7,24 +7,14 @@ const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
 
-const isEmpty = value => {
-  return (
-    value === undefined ||
-    value === null ||
-    (typeof value === "object" && Object.keys(value).length === 0) ||
-    (typeof value === "string" && value.trim().length === 0)
-  );
-};
-
 const { AdminAuthenticate } = require("../middlewares.js");
 const utils = require("../utils");
+const validateUser = require("../../validators/users");
 
-// @route  POST api/users/register
-// @desc   Create new user
-// @access Public
-router.post("/register", (req, res) => {
-  // Do some validations
-  const errors = {};
+function createUser(req, res, admin) {
+  const { errors, isValid } = validateUser(req.body);
+  if (!isValid) return res.status(400).json(errors);
+
   const { email, username } = req.body;
   User.find({
     $or: [{ email }, { username }]
@@ -33,14 +23,15 @@ router.post("/register", (req, res) => {
       errors.email = "Email already in use";
     if (users.filter(user => user.username === req.body.username).length > 0)
       errors.username = "Username already in use";
-    if (!isEmpty(errors)) return res.status(400).json(errors);
+    if (!utils.isEmpty(errors)) return res.status(400).json(errors);
 
     const newUser = new User({
       email: req.body.email,
       username: req.body.username,
       fullName: req.body.fullName,
       password: req.body.password,
-      birthdate: Date.parse(req.body.birthdate)
+      birthdate: Date.parse(req.body.birthdate),
+      admin: admin
     });
     if (req.body.phone) newUser.phone = req.body.phone;
 
@@ -58,11 +49,18 @@ router.post("/register", (req, res) => {
                 username: user.username
               });
             })
-            .catch(err => console.log(err));
+            .catch(err => res.status(400).json(err.errors));
         });
       })
       .catch(err => res.status(400).json(err.errors));
   });
+}
+
+// @route  POST api/users/register
+// @desc   Create new user
+// @access Public
+router.post("/register", (req, res) => {
+  createUser(req, res, false);
 });
 
 // @route  POST api/users/register/admin
@@ -73,47 +71,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   AdminAuthenticate,
   (req, res) => {
-    // Do some validations
-    const errors = {};
-    const { email, username } = req.body;
-    User.find({
-      $or: [{ email }, { username }]
-    }).then(users => {
-      if (users.filter(user => user.email === req.body.email).length > 0)
-        errors.email = "Email already in use";
-      if (users.filter(user => user.username === req.body.username).length > 0)
-        errors.username = "Username already in use";
-      if (!isEmpty(errors)) return res.status(400).json(errors);
-
-      const newUser = new User({
-        email: req.body.email,
-        username: req.body.username,
-        fullName: req.body.fullName,
-        password: req.body.password,
-        birthdate: Date.parse(req.body.birthdate),
-        admin: true
-      });
-      if (req.body.phone) newUser.phone = req.body.phone;
-
-      bcrypt
-        .genSalt(10, (err, salt) => {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) throw err;
-            newUser.password = hash;
-            newUser
-              .save()
-              .then(user => {
-                res.json({
-                  full_name: user.full_name,
-                  email: user.email,
-                  username: user.username
-                });
-              })
-              .catch(err => console.log(err));
-          });
-        })
-        .catch(err => res.status(400).json(err.errors));
-    });
+    createUser(req, res, true);
   }
 );
 
