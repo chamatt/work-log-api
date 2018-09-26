@@ -52,16 +52,10 @@ exports.createUser = (req, res, admin) => {
                 }
               });
             })
-            .catch(err =>
-              res
-                .status(400)
-                .json({ errors: "Failed to save new user 1", err: err.errors })
-            );
+            .catch(err => res.status(500));
         });
       })
-      .catch(err =>
-        res.status(400).json({ errors: "Failed to save new user 2" })
-      );
+      .catch(err => res.status(500));
   });
 };
 

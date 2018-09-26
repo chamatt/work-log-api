@@ -4,11 +4,14 @@
   "description": "API to log and keep track of the time spend on work.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "doc": "apidoc -e \"(node_modules|public)\" -o public/apidoc"
   },
   "author": "chamatt <matt.vicent@gmail.com>",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "apidoc": "^0.17.6",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",

@@ -1,0 +1,8 @@
+{
+  "name": "Work Log API Documentation",
+  "version": "1.0.0",
+  "description": "Work Log API to track time spent at work",
+  "template": {
+    "forceLanguage": "en"
+  }
+}
