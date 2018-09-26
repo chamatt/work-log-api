@@ -3,7 +3,7 @@ const AdminAuthenticate = (req, res, next) => {
     req.user.admin
       ? next()
       : res.status(403).json({ error: "You need to be an admin to do that" });
-  else res.status(403).json({ error: "You are not logged in" });
+  else res.status(401).json({ error: "You are not logged in" });
 };
 
 module.exports = {

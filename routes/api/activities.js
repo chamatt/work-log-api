@@ -6,42 +6,8 @@ const Activity = require("../../models/Ativity");
 const User = require("../../models/User");
 
 const { AdminAuthenticate } = require("../middlewares");
-
+const activitiesController = require("../../controllers/activitiesController");
 module.exports = router;
-
-function getActivities(req, res, days) {
-  console.log(req.query);
-  const id = req.user.id;
-
-  let { page, ...filter } = req.query;
-  const perPage = 25;
-  page = parseInt(page) || 1;
-
-  Activity.find({
-    ...filter,
-    user: id,
-    date: { $gt: moment().subtract(days, "days") }
-  })
-    .sort({ date: -1 })
-    .limit(perPage)
-    .skip(perPage * page - perPage)
-    .populate("user", ["id", "fullName", "username"])
-    .populate("category", ["id", "name"])
-    .then(activities => {
-      Activity.count({
-        ...filter,
-        user: id,
-        date: { $gt: moment().subtract(days, "days") }
-      }).then(count =>
-        res.json({
-          totalPages: Math.ceil(count / perPage),
-          page: page,
-          data: activities
-        })
-      );
-    })
-    .catch(err => res.status(400).json({ error: "Unknown error" }));
-}
 
 // @route  GET api/activities/me/week
 // @desc   Return my activities from the last 7 days
@@ -50,7 +16,7 @@ router.get(
   "/me/week",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    getActivities(req, res, 7);
+    activitiesController.getActivities(req, res, 7);
   }
 );
 // @route  GET api/activities/me/month
@@ -59,7 +25,7 @@ router.get(
 router.get(
   "/me/month",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => getActivities(req, res, 30)
+  (req, res) => activitiesController.getActivities(req, res, 30)
 );
 
 // @route  GET api/activities/me/
@@ -68,45 +34,46 @@ router.get(
 router.get(
   "/me/",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => getActivities(req, res, 10000)
+  (req, res) => activitiesController.getActivities(req, res, 10000)
 );
 
-// @route  GET api/activities
-// @desc   Return all activities
+// @route  POST api/activities
+// @desc   Create a new activity
 // @access Private
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const id = req.user.id;
-
-    const activity = new Activity({
-      date: moment(req.body.date, "YYYY-MM-DD"),
-      length: moment(req.body.length, "HH-mm"),
-      category: req.body.category,
-      description: req.body.description,
-      user: req.user.id
-    });
-
-    activity
-      .save()
-      .then(() => {
-        res.json({ success: true });
-      })
-      .catch(err => res.status(400).json({ errors: "Can't save activity" }));
-  }
+  activitiesController.createActivity
 );
 
-// @route  GET api/activities/:userId
+// @route  PUT api/activities/:id
+// @desc   Updates an activity
+// @access Private
+router.put(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  activitiesController.editActivity
+);
+
+// @route  DELETE api/activities/:id
+// @desc   Deletes an activity
+// @access Private
+router.put(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  activitiesController.deleteActivity
+);
+
+// @route  GET api/activities/user/:userId
 // @desc   Return activities of a specific user from the last 7 days
 // @access Admin
 router.get(
   "/:userId/week",
-  AdminAuthenticate,
   passport.authenticate("jwt", { session: false }),
+  AdminAuthenticate,
   (req, res) => {
-    req.user = req.params.userId;
-    getActivities(req, res, 7);
+    req.user.id = req.params.userId;
+    activitiesController.getActivities(req, res, 7);
   }
 );
 
@@ -118,8 +85,8 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   AdminAuthenticate,
   (req, res) => {
-    req.user = req.params.userId;
-    getActivities(req, res, 30);
+    req.user.id = req.params.userId;
+    activitiesController.getActivities(req, res, 30);
   }
 );
 
@@ -131,7 +98,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   AdminAuthenticate,
   (req, res) => {
-    req.user = req.params.userId;
-    getActivities(req, res, 10000);
+    req.user.id = req.params.userId;
+    activitiesController.getActivities(req, res, 10000);
   }
 );

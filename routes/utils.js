@@ -15,4 +15,23 @@ const isEmpty = value => {
   );
 };
 
-module.exports = { removePassword, removePasswordArray, isEmpty };
+const validatePhone = phone => {
+  var RegExp = /^1\d\d(\d\d)?$|^0800 ?\d{3} ?\d{4}$|^(\(0?([1-9a-zA-Z][0-9a-zA-Z])?[1-9]\d\) ?|0?([1-9a-zA-Z][0-9a-zA-Z])?[1-9]\d[ .-]?)?(9|9[ .-])?[2-9]\d{3}[ .-]?\d{4}$/;
+  return RegExp.test(phone);
+};
+
+const isValidDate = dateString => {
+  var regEx = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateString.match(regEx)) return false; // Invalid format
+  var d = new Date(dateString);
+  if (Number.isNaN(d.getTime())) return false; // Invalid date
+  return d.toISOString().slice(0, 10) === dateString;
+};
+
+module.exports = {
+  removePassword,
+  removePasswordArray,
+  isEmpty,
+  validatePhone,
+  isValidDate
+};

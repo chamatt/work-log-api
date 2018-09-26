@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const app = express();
+const morgan = require("morgan");
 
 const users = require("./routes/api/users");
 const activities = require("./routes/api/activities");
@@ -10,6 +11,7 @@ const categories = require("./routes/api/categories");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(morgan("combined"));
 
 // DB Config and Connection
 const db = require("./config/keys").mongoURI;

@@ -1,66 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../../models/User");
-
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
 const passport = require("passport");
 
 const { AdminAuthenticate } = require("../middlewares.js");
-const utils = require("../utils");
-const validateUser = require("../../validators/users");
-
-function createUser(req, res, admin) {
-  const { errors, isValid } = validateUser(req.body);
-  if (!isValid) return res.status(400).json(errors);
-
-  const { email, username } = req.body;
-  User.find({
-    $or: [{ email }, { username }]
-  }).then(users => {
-    if (users.filter(user => user.email === req.body.email).length > 0)
-      errors.email = "Email already in use";
-    if (users.filter(user => user.username === req.body.username).length > 0)
-      errors.username = "Username already in use";
-    if (!utils.isEmpty(errors)) return res.status(400).json(errors);
-
-    const newUser = new User({
-      email: req.body.email,
-      username: req.body.username,
-      fullName: req.body.fullName,
-      password: req.body.password,
-      birthdate: Date.parse(req.body.birthdate),
-      admin: admin
-    });
-    if (req.body.phone) newUser.phone = req.body.phone;
-
-    bcrypt
-      .genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then(user => {
-              res.json({
-                full_name: user.full_name,
-                email: user.email,
-                username: user.username
-              });
-            })
-            .catch(err => res.status(400).json(err.errors));
-        });
-      })
-      .catch(err => res.status(400).json(err.errors));
-  });
-}
+const usersController = require("../../controllers/usersController");
 
 // @route  POST api/users/register
 // @desc   Create new user
 // @access Public
 router.post("/register", (req, res) => {
-  createUser(req, res, false);
+  usersController.createUser(req, res, false);
 });
 
 // @route  POST api/users/register/admin
@@ -71,72 +20,22 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   AdminAuthenticate,
   (req, res) => {
-    createUser(req, res, true);
+    usersController.createUser(req, res, true);
   }
 );
 
 // @route  POST api/users/login
-// @desc   Login User / Returns JWT payloda
+// @desc   Login User / Returns JWT payload
 // @access Public
-router.post("/login", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+router.post("/login", usersController.loginUser);
 
-  User.findOne({ email }).then(user => {
-    if (!user) {
-      errors.email = "User not found";
-      return res.status(404).json(errors);
-    }
-
-    // Check password
-    bcrypt.compare(password, user.password).then(isMatch => {
-      if (isMatch) {
-        const payload = {
-          id: user.id,
-          full_name: user.full_name,
-          username: user.username,
-          email: user.email,
-          admin: user.admin
-        }; // JWT Payload
-        User.findOneAndUpdate(
-          { email },
-          { $set: { loggedAt: Date.now() } }
-        ).then(() => {
-          jwt.sign(
-            payload,
-            keys.secretOrKey,
-            { expiresIn: 86400 },
-            (err, token) => {
-              res.json({
-                sucess: true,
-                token: "Bearer " + token
-              });
-            }
-          );
-        });
-      } else {
-        errors.password = "Password Incorrect";
-        return res.status(400).json(errors);
-      }
-    });
-  });
-});
-
-// @route  GET api/users/current
+// @route  GET api/users/me
 // @desc   Return current user
 // @access Private
 router.get(
-  "/current",
+  "/me",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.json({
-      id: req.user.id,
-      fullName: req.user.fullName,
-      username: req.user.username,
-      email: req.user.email,
-      admin: req.user.admin
-    });
-  }
+  usersController.getCurrentUser
 );
 
 // @route  GET api/users/all
@@ -146,15 +45,7 @@ router.get(
   "/all",
   passport.authenticate("jwt", { session: false }),
   AdminAuthenticate,
-  (req, res) => {
-    const { query } = req;
-    User.find(query)
-      .then(users => {
-        const filteredUsers = utils.removePasswordArray(users);
-        res.json(filteredUsers);
-      })
-      .catch(err => res.json(err));
-  }
+  usersController.getAllUsers
 );
 
 // @route  GET api/users/:id
@@ -164,14 +55,16 @@ router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   AdminAuthenticate,
-  (req, res) => {
-    User.findById(req.params.id)
-      .then(user => {
-        const filteredUser = utils.removePassword(user);
-        res.json(filteredUser);
-      })
-      .catch(err => res.json(err));
-  }
+  usersController.getUserById
+);
+
+// @route  PUT api/users/
+// @desc   Edit current user
+// @access Private
+router.put(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  usersController.editCurrentUser
 );
 
 module.exports = router;
