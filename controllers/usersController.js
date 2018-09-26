@@ -65,8 +65,8 @@ exports.loginUser = (req, res) => {
 
   const { password, username } = req.body;
 
-  User.findOne({ $or: [{ email: username }, { username: username }] }).then(
-    user => {
+  User.findOne({ $or: [{ email: username }, { username: username }] })
+    .then(user => {
       if (!user) {
         errors.username = "Username/Email not found";
         return res.status(404).json({ errors });
@@ -104,8 +104,8 @@ exports.loginUser = (req, res) => {
           return res.status(400).json(errors);
         }
       });
-    }
-  );
+    })
+    .catch(() => res.status(500));
 };
 
 exports.getCurrentUser = (req, res) => {
