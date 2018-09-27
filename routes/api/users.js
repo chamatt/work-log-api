@@ -191,9 +191,39 @@ router.post(
  */
 router.post("/login", usersController.loginUser);
 
-// @route  GET api/users/me
-// @desc   Return current user
-// @access Private
+/**
+ * @api {post} /api/users/me Get logged user informations
+ * @apiGroup Users
+ * @apiPermission Private
+ * @apiHeader {String} Authorization JWT Token
+ * @apiSampleRequest http://localhost:3001/api/users/me
+ * @apiSuccess {Boolean} sucess Request Status
+ * @apiSuccess {String} action Action performed
+ * @apiSuccess {String} data
+ *
+ * @apiSuccess {String} data.id Id
+ * @apiSuccess {String} data.fullName Full Name
+ * @apiSuccess {String} data.email Email
+ * @apiSuccess {String} data.username Username
+ * @apiSuccess {Boolean} data.admin Is Admin
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "success": "true",
+ *      "action": "get",
+ *      "data": {
+ *        "id": "5baab405aef55939f01a3de1",
+ *        "fullName": "John Smith",
+ *        "email": "john.smith@gmail.com",
+ *        "username": "johnsmith",
+ *        "admin": true
+ *      }
+ *    }
+ *
+ * @apiErrorExample {json} Not Logged In
+ * HTTP/1.1 401 Unauthorized
+ */
 router.get(
   "/me",
   passport.authenticate("jwt", { session: false }),

@@ -121,6 +121,117 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/api/users/me",
+    "title": "Get logged user informations",
+    "group": "Users",
+    "permission": [
+      {
+        "name": "Private"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT Token</p>"
+          }
+        ]
+      }
+    },
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3001/api/users/me"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "sucess",
+            "description": "<p>Request Status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action performed</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.id",
+            "description": "<p>Id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.fullName",
+            "description": "<p>Full Name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.email",
+            "description": "<p>Email</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.username",
+            "description": "<p>Username</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "data.admin",
+            "description": "<p>Is Admin</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK\n{\n  \"success\": \"true\",\n  \"action\": \"get\",\n  \"data\": {\n    \"id\": \"5baab405aef55939f01a3de1\",\n    \"fullName\": \"John Smith\",\n    \"email\": \"john.smith@gmail.com\",\n    \"username\": \"johnsmith\",\n    \"admin\": true\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Logged In",
+          "content": "HTTP/1.1 401 Unauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./routes/api/users.js",
+    "groupTitle": "Users",
+    "name": "PostApiUsersMe"
+  },
+  {
+    "type": "post",
     "url": "/api/users/register",
     "title": "Register a new user",
     "group": "Users",
