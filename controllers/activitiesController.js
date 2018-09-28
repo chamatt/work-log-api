@@ -32,9 +32,9 @@ exports.getActivities = (req, res, days) => {
             data: activities
           })
         )
-        .catch(err => res.status(400).json({ errors: "Unknown error 101" }));
+        .catch(err => res.status(400).json({ errors: "Unknown error" }));
     })
-    .catch(err => res.status(400).json({ errors: "Unknown error 102" }));
+    .catch(err => res.status(400).json({ errors: "Unknown error" }));
 };
 
 exports.createActivity = (req, res) => {
@@ -58,11 +58,13 @@ exports.createActivity = (req, res) => {
 
 exports.editActivity = (req, res) => {
   const { name, category, date, length, description } = req.body;
-  Activity.findOne({ id: req.params.id }).then(activity => {
-    if (activity.user !== req.user)
+  Activity.findOne({ _id: req.params.id }).then(activity => {
+    if (activity.user._id + "" !== req.user._id + "") {
+      console.log("ocaralho", activity.user._id, req.user._id);
       return res.status(403).json({
         errors: "You do not have permission to edit someone else's activity"
       });
+    }
     Activity.findOneAndUpdate(
       { _id: req.params.id },
       { $set: { name, category, date, length, description } },
@@ -70,21 +72,34 @@ exports.editActivity = (req, res) => {
     )
       .then(result => res.json({ success: true, action: "edit", data: result }))
       .catch(() =>
-        res.status(400).json({ errors: "Unable to update activity" })
+        res.status(400).json({ errors: { objectID: "ObjectID is not valid" } })
       );
   });
 };
 
 exports.deleteActivity = (req, res) => {
-  Activity.findOne({ id: req.params.id }).then(activity => {
-    if (activity.user !== req.user)
-      return res.status(403).json({
-        errors: "You do not have permission to delete someone else's activity"
-      });
-    Activity.findByIdAndRemove(req.params.id)
-      .then(() => res.json({ success: true, action: "delete", data: result }))
-      .catch(() =>
-        res.status(400).json({ errors: "Unable to update activity" })
-      );
-  });
+  Activity.findOne({ _id: req.params.id })
+    .then(activity => {
+      if (activity.user._id + "" !== req.user._id + "") {
+        return res.status(403).json({
+          errors: {
+            forbidden:
+              "You do not have permission to delete someone else's activity"
+          }
+        });
+      }
+      Activity.findByIdAndRemove(req.params.id)
+        .then(result =>
+          res.json({ success: true, action: "delete", data: result })
+        )
+        .catch(() =>
+          res
+            .status(400)
+            .json({ errors: { objectID: "ObjectID is not valid" } })
+        );
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400).json({ errors: { objectID: "ObjectID is not valid" } });
+    });
 };

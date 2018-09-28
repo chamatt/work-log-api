@@ -120,6 +120,13 @@ router.post("/register", (req, res) => {
  *      }
  *    }
  *
+ * @apiError 401 NotLoggedIn
+ * @apiErrorExample {json} NotLoggedIn
+ * HTTP/1.1 401 Unauthorized
+ * @apiError 403 NotAdmin
+ * @apiErrorExample {json} NotAdmin
+ * HTTP/1.1 403 Forbidden
+ *
  * @apiError {json} ValidationError Validation failed for register fields
  * @apiError {String} ValidationError.email Email validations
  * @apiError {String} ValidationError.username Username validations
@@ -209,6 +216,8 @@ router.post("/login", usersController.loginUser);
  * @apiSuccess {String} data.username Username
  * @apiSuccess {Boolean} data.admin Is Admin
  *
+ *
+ *
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -222,6 +231,7 @@ router.post("/login", usersController.loginUser);
  *        "admin": true
  *      }
  *    }
+ *
  *
  * @apiErrorExample {json} Not Logged In
  * HTTP/1.1 401 Unauthorized
@@ -246,10 +256,10 @@ router.get(
  * @apiSuccess {String} data.fullName Full Name
  * @apiSuccess {String} data.email Email
  * @apiSuccess {String} data.username Username
- * @apiSuccess {Boolean} data.birthdate Date of birth (YYYY-MM-DD)
- * @apiSuccess {Boolean} data.phone Phone number
- * @apiSuccess {Boolean} data.createdAt Date of account creation
- * @apiSuccess {Boolean} data.loggedAt Last login
+ * @apiSuccess {Date} data.birthdate Date of birth (YYYY-MM-DD)
+ * @apiSuccess {String} data.phone Phone number
+ * @apiSuccess {Date} data.createdAt Date of account creation
+ * @apiSuccess {Date} data.loggedAt Last login
  *
  *
  * @apiSuccessExample {json} Success
@@ -299,10 +309,10 @@ router.get(
  * @apiSuccess {String} data.fullName Full Name
  * @apiSuccess {String} data.email Email
  * @apiSuccess {String} data.username Username
- * @apiSuccess {Boolean} data.birthdate Date of birth (YYYY-MM-DD)
- * @apiSuccess {Boolean} data.phone Phone number
- * @apiSuccess {Boolean} data.createdAt Date of account creation
- * @apiSuccess {Boolean} data.loggedAt Last login
+ * @apiSuccess {Date} data.birthdate Date of birth (YYYY-MM-DD)
+ * @apiSuccess {String} data.phone Phone number
+ * @apiSuccess {Date} data.createdAt Date of account creation
+ * @apiSuccess {Date} data.loggedAt Last login
  *
  *
  * @apiSuccessExample {json} Success
@@ -376,6 +386,10 @@ router.get(
  *      }
  *    }
  *
+ * @apiError 401 NotLoggedIn
+ * @apiErrorExample {json} NotLoggedIn
+ * HTTP/1.1 401 Unauthorized
+ * 
  * @apiError {json} ValidationError Validation failed for edit fileds
  * @apiError {String} ValidationError.birthdate Birthdate validations
  * @apiError {String} ValidationError.phone Phone validations

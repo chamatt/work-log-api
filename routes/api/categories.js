@@ -145,7 +145,7 @@ router.post(
  * @apiError 400 ObjectID Invalid
  * @apiErrorExample {json} ObjectID Invalid
  * HTTP/1.1 400 Bad Request
- * { errors: {objectID: "ObjectID is not valid"}
+ * { errors: {objectID: "ObjectID is not valid"} }
  */
 router.delete(
   "/:id",
@@ -204,7 +204,7 @@ router.delete(
  * @apiError 400 ObjectID Invalid
  * @apiErrorExample {json} ObjectID Invalid
  * HTTP/1.1 400 Bad Request
- * { errors: {objectID: "ObjectID is not valid"}
+ * { errors: {objectID: "ObjectID is not valid"}}
  */
 router.put(
   "/:id",

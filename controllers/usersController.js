@@ -149,7 +149,9 @@ exports.getUserById = (req, res) => {
       const filteredUser = utils.removePassword(user);
       res.json({ success: "true", action: "get", data: filteredUser });
     })
-    .catch(err => res.status(400).json({ errors: "Unable to get user" }));
+    .catch(err =>
+      res.status(400).json({ errors: { objectID: "ObjectID is not valid" } })
+    );
 };
 
 exports.editCurrentUser = (req, res) => {
@@ -163,11 +165,14 @@ exports.editCurrentUser = (req, res) => {
     { new: true }
   )
     .then(user => {
-      if (!user) res.status(404).json({ errors: "User not found" });
+      if (!user)
+        res.status(404).json({ errors: { usernotfound: "User not found" } });
       const filteredUser = utils.removePassword(user);
       const { fullName, birthdate, phone, avatar } = filteredUser;
       const info = { fullName, birthdate, phone, avatar };
       res.json({ success: "true", action: "edit", data: info });
     })
-    .catch(err => res.status(400).json({ errors: "Unable to edit user" }));
+    .catch(err =>
+      res.status(400).json({ errors: { objectID: "ObjectID is not valid" } })
+    );
 };

@@ -126,28 +126,28 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "Date",
             "optional": false,
             "field": "data.birthdate",
             "description": "<p>Date of birth (YYYY-MM-DD)</p>"
           },
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "String",
             "optional": false,
             "field": "data.phone",
             "description": "<p>Phone number</p>"
           },
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "Date",
             "optional": false,
             "field": "data.createdAt",
             "description": "<p>Date of account creation</p>"
           },
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "Date",
             "optional": false,
             "field": "data.loggedAt",
             "description": "<p>Last login</p>"
@@ -276,28 +276,28 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "Date",
             "optional": false,
             "field": "data.birthdate",
             "description": "<p>Date of birth (YYYY-MM-DD)</p>"
           },
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "String",
             "optional": false,
             "field": "data.phone",
             "description": "<p>Phone number</p>"
           },
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "Date",
             "optional": false,
             "field": "data.createdAt",
             "description": "<p>Date of account creation</p>"
           },
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "Date",
             "optional": false,
             "field": "data.loggedAt",
             "description": "<p>Last login</p>"
@@ -916,6 +916,18 @@ define({ "api": [
         "Error 4xx": [
           {
             "group": "Error 4xx",
+            "optional": false,
+            "field": "401",
+            "description": "<p>NotLoggedIn</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "403",
+            "description": "<p>NotAdmin</p>"
+          },
+          {
+            "group": "Error 4xx",
             "type": "json",
             "optional": false,
             "field": "ValidationError",
@@ -959,6 +971,16 @@ define({ "api": [
         ]
       },
       "examples": [
+        {
+          "title": "NotLoggedIn",
+          "content": "HTTP/1.1 401 Unauthorized",
+          "type": "json"
+        },
+        {
+          "title": "NotAdmin",
+          "content": "HTTP/1.1 403 Forbidden",
+          "type": "json"
+        },
         {
           "title": "Validation Error",
           "content": "HTTP/1.1 400 Bad Request\n{\n \"email\": \"Email is not valid\",\n \"username\": \"Username must have between 6 and 24 characters\",\n \"password\": \"Password must have between 6 and 24 characters\",\n \"password2\": \"Full name field is required\",\n \"birthdate\": \"Invalid birthdate, dates must be in the following format: YYYY-MM-DD\",\n \"phone\": \"Invalid phone number\"\n\n}",
@@ -1092,6 +1114,12 @@ define({ "api": [
         "Error 4xx": [
           {
             "group": "Error 4xx",
+            "optional": false,
+            "field": "401",
+            "description": "<p>NotLoggedIn</p>"
+          },
+          {
+            "group": "Error 4xx",
             "type": "json",
             "optional": false,
             "field": "ValidationError",
@@ -1115,6 +1143,11 @@ define({ "api": [
       },
       "examples": [
         {
+          "title": "NotLoggedIn",
+          "content": "HTTP/1.1 401 Unauthorized",
+          "type": "json"
+        },
+        {
           "title": "Validation Error",
           "content": "HTTP/1.1 400 Bad Request\n{\n \"email\": \"Email is not valid\",\n \"username\": \"Username must have at least 6 characters\",\n \"password\": \"Password must have at least 6 characters\",\n \"password2\": \"Full name field is required\",\n \"birthdate\": \"Invalid birthdate, dates must be in the following format: YYYY-MM-DD\",\n \"phone\": \"Invalid phone number\"\n\n}",
           "type": "json"
@@ -1130,6 +1163,393 @@ define({ "api": [
     "filename": "./routes/api/users.js",
     "groupTitle": "2_Users",
     "name": "PutApiUsersMe"
+  },
+  {
+    "type": "get",
+    "url": "/api/activities/me",
+    "title": "Get All Activities From Current User",
+    "group": "Activities",
+    "sampleRequest": [
+      {
+        "url": "/api/activities/me"
+      }
+    ],
+    "permission": [
+      {
+        "name": "Private"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Query params": [
+          {
+            "group": "Query params",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "1",
+            "description": "<p>Page (Each page has 25 activities at most)</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Request Status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action performed</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "totalPages",
+            "description": "<p>Total number of pages in the request</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Current page</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Category data</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data.category",
+            "description": "<p>categories list</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.category._id",
+            "description": "<p>Category ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.category.name",
+            "description": "<p>Category Name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.date",
+            "description": "<p>Date of activity</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.length",
+            "description": "<p>Length of activity</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.description",
+            "description": "<p>Activity description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.user",
+            "description": "<p>Owner of activity</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.user._id",
+            "description": "<p>User ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.user.username",
+            "description": "<p>Username</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.user.name",
+            "description": "<p>User Fullname</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "  HTTP/1.1 200 OK\n{\n   \"totalPages\": 1,\n   \"page\": 1,\n   \"data\": [\n     {\n       \"category\": [\n         {\n           \"_id\": \"5ba44feca2504832a88c1edf\",\n           \"name\": \"Mobile\"\n         },\n         {\n           \"_id\": \"5ba44ffda2504832a88c1ee0\",\n           \"name\": \"Web\"\n         }\n       ],\n       \"_id\": \"5ba941ed77993b6aacdc4e7e\",\n       \"date\": \"2018-09-23T03:00:00.000Z\",\n       \"length\": \"2018-09-24T03:01:00.000Z\",\n       \"description\": \"Did some things\",\n       \"user\": {\n         \"_id\": \"5ba532b3ec4a3f764d02b665\",\n         \"username\": \"johnsmith\",\n         \"fullName\": \"John Smith\"\n       },\n       \"__v\": 0\n     }\n   ]\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "401",
+            "description": "<p>NotLoggedIn</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "NotLoggedIn",
+          "content": "HTTP/1.1 401 Unauthorized",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./routes/api/activities.js",
+    "groupTitle": "Activities",
+    "name": "GetApiActivitiesMe"
+  },
+  {
+    "type": "get",
+    "url": "/api/activities/me/:days",
+    "title": "Get Last X Days Activities From Current User",
+    "group": "Activities",
+    "sampleRequest": [
+      {
+        "url": "/api/activities/me/:days"
+      }
+    ],
+    "permission": [
+      {
+        "name": "Private"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Query params": [
+          {
+            "group": "Query params",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "1",
+            "description": "<p>Page (Each page has 25 activities at most)</p>"
+          }
+        ],
+        "URL Params": [
+          {
+            "group": "URL Params",
+            "type": "Number",
+            "optional": false,
+            "field": "days",
+            "description": "<p>How many days of activities you want to get</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Request Status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action performed</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "totalPages",
+            "description": "<p>Total number of pages in the request</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Current page</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Category data</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data.category",
+            "description": "<p>categories list</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.category._id",
+            "description": "<p>Category ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.category.name",
+            "description": "<p>Category Name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.date",
+            "description": "<p>Date of activity</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.length",
+            "description": "<p>Length of activity</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.description",
+            "description": "<p>Activity description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.user",
+            "description": "<p>Owner of activity</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.user._id",
+            "description": "<p>User ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.user.username",
+            "description": "<p>Username</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.user.name",
+            "description": "<p>User Fullname</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "  HTTP/1.1 200 OK\n{\n   \"totalPages\": 1,\n   \"page\": 1,\n   \"data\": [\n     {\n       \"category\": [\n         {\n           \"_id\": \"5ba44feca2504832a88c1edf\",\n           \"name\": \"Mobile\"\n         },\n         {\n           \"_id\": \"5ba44ffda2504832a88c1ee0\",\n           \"name\": \"Web\"\n         }\n       ],\n       \"_id\": \"5ba941ed77993b6aacdc4e7e\",\n       \"date\": \"2018-09-23T03:00:00.000Z\",\n       \"length\": \"2018-09-24T03:01:00.000Z\",\n       \"description\": \"Did some things\",\n       \"user\": {\n         \"_id\": \"5ba532b3ec4a3f764d02b665\",\n         \"username\": \"johnsmith\",\n         \"fullName\": \"John Smith\"\n       },\n       \"__v\": 0\n     }\n   ]\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "401",
+            "description": "<p>NotLoggedIn</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "NotLoggedIn",
+          "content": "HTTP/1.1 401 Unauthorized",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./routes/api/activities.js",
+    "groupTitle": "Activities",
+    "name": "GetApiActivitiesMeDays"
   },
   {
     "type": "DELETE",
@@ -1267,7 +1687,7 @@ define({ "api": [
         },
         {
           "title": "ObjectID Invalid",
-          "content": "HTTP/1.1 400 Bad Request\n{ errors: {objectID: \"ObjectID is not valid\"}",
+          "content": "HTTP/1.1 400 Bad Request\n{ errors: {objectID: \"ObjectID is not valid\"} }",
           "type": "json"
         }
       ]
@@ -1694,7 +2114,7 @@ define({ "api": [
         },
         {
           "title": "ObjectID Invalid",
-          "content": "HTTP/1.1 400 Bad Request\n{ errors: {objectID: \"ObjectID is not valid\"}",
+          "content": "HTTP/1.1 400 Bad Request\n{ errors: {objectID: \"ObjectID is not valid\"}}",
           "type": "json"
         }
       ]
