@@ -63,9 +63,9 @@ To start the server, just type ```npm start```, the server will be running on [l
 ## Deploying for production
 
 The project is already setup to be deploy to cloud services like *Heroku*, you just need to set the same ENV variables as above.
-On Heroku, you can do this by following this tutorial: [Heroku Config Vars](localhost:3001/)
+On Heroku, you can do this by following this tutorial: [Heroku Config Vars](https://devcenter.heroku.com/articles/config-vars)
 
 # Documentation
 
-You can read the *sample documentation* (Request examples don't work) at [Work Log API Docs](chamatt.github.io/work-log-api)
-To host you own (working) documentaion, run: ```npm run doc``` on the terminal, and go to [localhost:3001/docs](localhost:3001/docs) to read it.
+You can read the *sample documentation* (Request examples don't work) at [Work Log API Docs](https://chamatt.github.io/work-log-api)
+To host you own (working) documentaion, run: ```npm run doc``` on the terminal, and go to [localhost:3001/docs](http://localhost:3001/docs) to read it.
