@@ -80,7 +80,7 @@ router.get(
   "/me/:days",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    activitiesController.getActivities(req, res, req.param.days);
+    activitiesController.getActivities(req, res, parseInt(req.params.days));
   }
 );
 

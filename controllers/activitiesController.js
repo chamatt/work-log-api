@@ -8,7 +8,7 @@ exports.getActivities = (req, res, days) => {
   let { page, ...filter } = req.query;
   const perPage = 25;
   page = parseInt(page) || 1;
-
+  days = parseInt(days);
   Activity.find({
     ...filter,
     user: id,
