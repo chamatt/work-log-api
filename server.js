@@ -62,7 +62,7 @@ app.get("/api", (req, res) => {
 app.use("/api/categories", categories);
 app.use("/api/users", users);
 app.use("/api/activities", activities);
-app.use("/docs", express.static(__dirname + "/public/apidoc"));
+app.use("/docs", express.static(__dirname + "/docs"));
 
 // Start app
 const port = process.env.PORT || 3001;
