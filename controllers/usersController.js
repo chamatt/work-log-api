@@ -42,13 +42,14 @@ exports.createUser = (req, res, admin) => {
           newUser
             .save()
             .then(user => {
-              res.json({
+              res.status(201).json({
                 success: "true",
                 action: "register",
                 data: {
                   fullName: user.fullName,
                   email: user.email,
-                  username: user.username
+                  username: user.username,
+                  admin: user.admin
                 }
               });
             })
@@ -80,7 +81,8 @@ exports.loginUser = (req, res) => {
             full_name: user.full_name,
             username: user.username,
             email: user.email,
-            admin: user.admin
+            admin: user.admin,
+            avatar: user.avatar
           }; // JWT Payload
           User.findOneAndUpdate(
             { $or: [{ email: username }, { username: username }] },
@@ -92,7 +94,7 @@ exports.loginUser = (req, res) => {
               { expiresIn: 86400 },
               (err, token) => {
                 res.json({
-                  sucess: true,
+                  success: true,
                   action: "login",
                   token: "Bearer " + token
                 });
@@ -110,11 +112,16 @@ exports.loginUser = (req, res) => {
 
 exports.getCurrentUser = (req, res) => {
   res.json({
-    id: req.user.id,
-    fullName: req.user.fullName,
-    username: req.user.username,
-    email: req.user.email,
-    admin: req.user.admin
+    success: "true",
+    action: "get",
+    data: {
+      _id: req.user.id,
+      fullName: req.user.fullName,
+      username: req.user.username,
+      email: req.user.email,
+      admin: req.user.admin,
+      avatar: req.user.avatar
+    }
   });
 };
 
@@ -122,8 +129,15 @@ exports.getAllUsers = (req, res) => {
   const { query } = req;
   User.find(query)
     .then(users => {
-      const filteredUsers = utils.removePasswordArray(users);
-      res.json(filteredUsers);
+      User.count(query).then(count => {
+        const filteredUsers = utils.removePasswordArray(users);
+        res.json({
+          success: "true",
+          action: "get",
+          count,
+          data: filteredUsers
+        });
+      });
     })
     .catch(err => res.json({ errors: "Unable to get all users" }));
 };
@@ -133,7 +147,7 @@ exports.getUserById = (req, res) => {
     .then(user => {
       if (!user) return res.status(404).json({ errors: "User not found" });
       const filteredUser = utils.removePassword(user);
-      res.json(filteredUser);
+      res.json({ success: "true", action: "get", data: filteredUser });
     })
     .catch(err => res.status(400).json({ errors: "Unable to get user" }));
 };
@@ -151,7 +165,9 @@ exports.editCurrentUser = (req, res) => {
     .then(user => {
       if (!user) res.status(404).json({ errors: "User not found" });
       const filteredUser = utils.removePassword(user);
-      res.json({ success: true, action: "edit", data: filteredUser });
+      const { fullName, birthdate, phone, avatar } = filteredUser;
+      const info = { fullName, birthdate, phone, avatar };
+      res.json({ success: "true", action: "edit", data: info });
     })
     .catch(err => res.status(400).json({ errors: "Unable to edit user" }));
 };

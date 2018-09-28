@@ -33,6 +33,23 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 // Entry point
+
+/**
+ * @api {get} /api Entry point
+ * @apiGroup 1. Introduction
+ * @apiDescription Information about API
+ * @apiSuccess {String} name API Name
+ * @apiSuccess {String} description API Description
+ * @apiSuccess {String} github Github Repository link
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *       "name": "Work Log API",
+ *       "description": "REST API to log and track time spent at work.",
+ *       "github": "https://github.com/chamatt/work-log-api"
+ *    }
+ */
 app.get("/api", (req, res) => {
   res.json({
     name: "Work Log API",

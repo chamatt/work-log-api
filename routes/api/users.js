@@ -6,18 +6,18 @@ const { AdminAuthenticate } = require("../middlewares.js");
 const usersController = require("../../controllers/usersController");
 
 /**
- * @api {post} /api/users/register Register a new user
- * @apiGroup Users
- * @apiSampleRequest http://localhost:3001/api/users/register
+ * @api {post} /api/users/register Register User
+ * @apiGroup 2 Users
+ * @apiSampleRequest /api/users/register
  * @apiPermission Public
  * 
- * @apiParam (Request Body) {String} username Username (Required)
- * @apiParam (Request Body) {String} email Email (Required)
- * @apiParam (Request Body) {String} password Password (Required) (Minimum 6 characters)
- * @apiParam (Request Body) {String} password2 Confirm Password (Required) (Minimum 6 characters)
- * @apiParam (Request Body) {String} fullName Full Name (Required)
- * @apiParam (Request Body) {String} birthdate Birth Date (Required) (Format: YYYY-MM-DD)
- * @apiParam (Request Body) {String} phone Phone or Mobile Number (Required) (Format: 11999998888)
+ * @apiParam (Request Body) {String} username Username
+ * @apiParam (Request Body) {String} email Email
+ * @apiParam (Request Body) {String} password Password (Minimum 6 characters)
+ * @apiParam (Request Body) {String} password2 Confirm Password (Minimum 6 characters)
+ * @apiParam (Request Body) {String} fullName Full Name
+ * @apiParam (Request Body) {String} birthdate Birth Date (Format: YYYY-MM-DD)
+ * @apiParam (Request Body) {String} [phone] Phone or Mobile Number (Format: 11999998888)
  *
  
  *
@@ -30,7 +30,7 @@ const usersController = require("../../controllers/usersController");
  *      "birthdate": "2000-12-01",
  *      "phone": "27994949993"
  *    }
- * @apiSuccess {Boolean} sucess Request Status
+ * @apiSuccess {Boolean} success Request Status
  * @apiSuccess {String} action Action performed
  * @apiSuccess {Object} data User data
  * @apiSuccess {String} data.fullName Full name
@@ -39,14 +39,15 @@ const usersController = require("../../controllers/usersController");
  *
  *
  * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
+ *    HTTP/1.1 201 Created
  *    {
- *      success: "true",
- *      action: "register",
- *      data: {
- *        fullName: "John Smith",
- *        email: "john.smith@gmail.com",
- *        username: "johnsmith"
+ *      "success": "true",
+ *      "action": "register",
+ *      "data": {
+ *        "fullName": "John Smith",
+ *        "email": "john.smith@gmail.com",
+ *        "username": "johnsmith",
+ *        "admin": false
  *      }
  *    }
  *
@@ -61,8 +62,8 @@ const usersController = require("../../controllers/usersController");
  * HTTP/1.1 400 Bad Request
  * {
  *  "email": "Email is not valid",
- *  "username": "Username must have at least 6 characters",
- *  "password": "Password must have at least 6 characters",
+ *  "username": "Username must have between 6 and 24 characters",
+ *  "password": "Password must have between 6 and 24 characters",
  *  "password2": "Full name field is required",
  *  "birthdate": "Invalid birthdate, dates must be in the following format: YYYY-MM-DD",
  *  "phone": "Invalid phone number"
@@ -76,18 +77,18 @@ router.post("/register", (req, res) => {
 });
 
 /**
- * @api {post} /api/users/register/admin Register a new admin user
- * @apiGroup Users
- * @apiSampleRequest http://localhost:3001/api/users/register/admin
+ * @api {post} /api/users/register/admin Register Admin User
+ * @apiGroup 2 Users
+ * @apiSampleRequest /api/users/register/admin
  * @apiPermission Admin
  * @apiHeader {String} Authorization JWT Token
- * @apiParam (Request Body) {String} username Username (Required)
- * @apiParam (Request Body) {String} email Email (Required)
- * @apiParam (Request Body) {String} password Password (Required) (Minimum 6 characters)
- * @apiParam (Request Body) {String} password2 Confirm Password (Required) (Minimum 6 characters)
- * @apiParam (Request Body) {String} fullName Full Name (Required)
- * @apiParam (Request Body) {String} birthdate Birth Date (Required) (Format: YYYY-MM-DD)
- * @apiParam (Request Body) {String} phone Phone or Mobile Number (Required) (Format: 11999998888)
+ * @apiParam (Request Body) {String} username Username
+ * @apiParam (Request Body) {String} email Email
+ * @apiParam (Request Body) {String} password Password (Minimum 6 characters)
+ * @apiParam (Request Body) {String} password2 Confirm Password (Minimum 6 characters)
+ * @apiParam (Request Body) {String} fullName Full Name
+ * @apiParam (Request Body) {String} birthdate Birth Date (Format: YYYY-MM-DD)
+ * @apiParam (Request Body) {String} [phone] Phone or Mobile Number (Format: 11999998888)
  *
  * @apiParamExample {json} Input
  *    {
@@ -98,7 +99,7 @@ router.post("/register", (req, res) => {
  *      "birthdate": "2000-12-01",
  *      "phone": "27994949993"
  *    }
- * @apiSuccess {Boolean} sucess Request Status
+ * @apiSuccess {Boolean} success Request Status
  * @apiSuccess {String} action Action performed
  * @apiSuccess {Object} data User data
  * @apiSuccess {String} data.fullName Full name
@@ -109,12 +110,13 @@ router.post("/register", (req, res) => {
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
- *      success: "true",
- *      action: "register",
- *      data: {
- *        fullName: "John Smith",
- *        email: "john.smith@gmail.com",
- *        username: "johnsmith"
+ *      "success": "true",
+ *      "action": "register",
+ *      "data": {
+ *        "fullName": "John Smith",
+ *        "email": "john.smith@gmail.com",
+ *        "username": "johnsmith",
+ *        "admin": true
  *      }
  *    }
  *
@@ -128,8 +130,8 @@ router.post("/register", (req, res) => {
  * HTTP/1.1 400 Bad Request
  * {
  *  "email": "Email is not valid",
- *  "username": "Username must have at least 6 characters",
- *  "password": "Password must have at least 6 characters",
+ *  "username": "Username must have between 6 and 24 characters",
+ *  "password": "Password must have between 6 and 24 characters",
  *  "password2": "Full name field is required",
  *  "birthdate": "Invalid birthdate, dates must be in the following format: YYYY-MM-DD",
  *  "phone": "Invalid phone number"
@@ -148,32 +150,32 @@ router.post(
 );
 
 /**
- * @api {post} /api/users/login Login a user and returns token
- * @apiGroup Users
+ * @api {post} /api/users/login Login User
+ * @apiGroup 2 Users
  * @apiPermission Public
- * @apiSampleRequest http://localhost:3001/api/users/login
+ * @apiSampleRequest /api/users/login
  *
- * @apiParam (Request Body) {String} username Username or Email (Required)
- * @apiParam (Request Body) {String} password Password (Required)
+ * @apiParam (Request Body) {String} username Username or Email
+ * @apiParam (Request Body) {String} password Password
  *
  * @apiParamExample {json} Input
  *    {
  *      "username": "johnsmith",
  *      "password": "j0nH5m17h"
  *    }
- * @apiSuccess {Boolean} sucess Request Status
+ * @apiSuccess {Boolean} success Request Status
  * @apiSuccess {String} action Action performed
  * @apiSuccess {String} token JWT Token
  *
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
- *      success: "true",
- *      action: "register",
- *      data: {
- *        fullName: "John Smith",
- *        email: "john.smith@gmail.com",
- *        username: "johnsmith"
+ *      "success": "true",
+ *      "action": "register",
+ *      "data": {
+ *        "fullName": "John Smith",
+ *        "email": "john.smith@gmail.com",
+ *        "username": "johnsmith"
  *      }
  *    }
  *
@@ -192,14 +194,14 @@ router.post(
 router.post("/login", usersController.loginUser);
 
 /**
- * @api {post} /api/users/me Get logged user informations
- * @apiGroup Users
+ * @api {get} /api/users/me Get Current User
+ * @apiGroup 2 Users
  * @apiPermission Private
  * @apiHeader {String} Authorization JWT Token
- * @apiSampleRequest http://localhost:3001/api/users/me
- * @apiSuccess {Boolean} sucess Request Status
+ * @apiSampleRequest /api/users/me
+ * @apiSuccess {Boolean} success Request Status
  * @apiSuccess {String} action Action performed
- * @apiSuccess {String} data
+ * @apiSuccess {Object} data
  *
  * @apiSuccess {String} data.id Id
  * @apiSuccess {String} data.fullName Full Name
@@ -210,10 +212,10 @@ router.post("/login", usersController.loginUser);
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
- *      "success": "true",
+ *      "success": true,
  *      "action": "get",
  *      "data": {
- *        "id": "5baab405aef55939f01a3de1",
+ *        "_id": "5baab405aef55939f01a3de1",
  *        "fullName": "John Smith",
  *        "email": "john.smith@gmail.com",
  *        "username": "johnsmith",
@@ -230,9 +232,50 @@ router.get(
   usersController.getCurrentUser
 );
 
-// @route  GET api/users/all
-// @desc   Return all users
-// @access Admin
+/**
+ * @api {get} /api/users/all Get All Users
+ * @apiGroup 2 Users
+ * @apiPermission Admin
+ * @apiHeader {String} Authorization JWT Token
+ * @apiSampleRequest /api/users/all
+ * @apiSuccess {Boolean} success Request Status
+ * @apiSuccess {String} action Action performed
+ * @apiSuccess {Object[]} data
+ *
+ * @apiSuccess {String} data._id Id
+ * @apiSuccess {String} data.fullName Full Name
+ * @apiSuccess {String} data.email Email
+ * @apiSuccess {String} data.username Username
+ * @apiSuccess {Boolean} data.birthdate Date of birth (YYYY-MM-DD)
+ * @apiSuccess {Boolean} data.phone Phone number
+ * @apiSuccess {Boolean} data.createdAt Date of account creation
+ * @apiSuccess {Boolean} data.loggedAt Last login
+ *
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "success": true,
+ *      "action": "get",
+ *      "count": "12"
+ *      "data": [{
+ *        "admin": false,
+ *        "phone": "27994949993",
+ *        "_id": "5bae651e6866f10015d2b128",
+ *        "fullName": "John Smith",
+ *        "email": "john.smith@gmail.com",
+ *        "username": "johnsmith",
+ *        "birthdate": "2000-12-01T00:00:00.000Z",
+ *        "createdAt": "2018-09-28T17:30:06.905Z",
+ *        "loggedAt": "2018-09-28T17:30:06.905Z",
+ *      }]
+ *    }
+ *
+ * @apiErrorExample {json} Not Logged In
+ * HTTP/1.1 401 Unauthorized
+ * @apiErrorExample {json} Not an Admin
+ * HTTP/1.1 403 Forbidden
+ */
 router.get(
   "/all",
   passport.authenticate("jwt", { session: false }),
@@ -240,9 +283,51 @@ router.get(
   usersController.getAllUsers
 );
 
-// @route  GET api/users/:id
-// @desc   Return specified user
-// @access Admin
+/**
+ * @api {get} /api/users/:id Get User By Id
+ * @apiGroup 2 Users
+ * @apiPermission Admin
+ * @apiHeader {String} Authorization JWT Token
+ * @apiSampleRequest /api/users/:id
+ * @apiParam (URL Params) {String} id User id (Required)
+ *
+ * @apiSuccess {Boolean} success Request Status
+ * @apiSuccess {String} action Action performed
+ * @apiSuccess {Object} data
+ *
+ * @apiSuccess {String} data._id Id
+ * @apiSuccess {String} data.fullName Full Name
+ * @apiSuccess {String} data.email Email
+ * @apiSuccess {String} data.username Username
+ * @apiSuccess {Boolean} data.birthdate Date of birth (YYYY-MM-DD)
+ * @apiSuccess {Boolean} data.phone Phone number
+ * @apiSuccess {Boolean} data.createdAt Date of account creation
+ * @apiSuccess {Boolean} data.loggedAt Last login
+ *
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "success": true,
+ *      "action": "get",
+ *      "data": {
+ *        "admin": false,
+ *        "phone": "27994949993",
+ *        "_id": "5bae651e6866f10015d2b128",
+ *        "fullName": "John Smith",
+ *        "email": "john.smith@gmail.com",
+ *        "username": "johnsmith",
+ *        "birthdate": "2000-12-01T00:00:00.000Z",
+ *        "createdAt": "2018-09-28T17:30:06.905Z",
+ *        "loggedAt": "2018-09-28T17:30:06.905Z",
+ *      }
+ *    }
+ *
+ * @apiErrorExample {json} Not Logged In
+ * HTTP/1.1 401 Unauthorized
+ * @apiErrorExample {json} Not an Admin
+ * HTTP/1.1 403 Forbidden
+ */
 router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
@@ -250,11 +335,66 @@ router.get(
   usersController.getUserById
 );
 
-// @route  PUT api/users/
-// @desc   Edit current user
-// @access Private
+/**
+ * @api {PUT} /api/users/me Edit Current User
+ * @apiGroup 2 Users
+ * @apiSampleRequest /api/users/me
+ * @apiPermission Private
+ * 
+ * @apiParam (Request Body) {String} [fullName] Full Name
+ * @apiParam (Request Body) {String} [birthdate] Birth Date (Format: YYYY-MM-DD)
+ * @apiParam (Request Body) {String} [phone] Phone or Mobile Number (Format: 11999998888)
+ * @apiParam (Request Body) {String} [avatar] User avatar (Format: URL)
+ *
+ 
+ *
+ * @apiParamExample {json} Input
+ *    {
+ *      "fullName": "John Smith",
+ *      "birthdate": "2000-12-01",
+ *      "phone": "27994949993",
+ *      "avatar": "http://example.com/example.jpg"
+ *    }
+ * @apiSuccess {Boolean} success Request Status
+ * @apiSuccess {String} action Action performed
+ * @apiSuccess {Object} data User data
+ * @apiSuccess {String} data.fullName Full name
+ * @apiSuccess {String} data.email User email
+ * @apiSuccess {String} data.username Username
+ *
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 201 Created
+ *    {
+ *      "success": "true",
+ *      "action": "register",
+ *      "data": {
+ *        "fullName": "John Smith",
+ *        "phone": "john.smith@gmail.com",
+ *        "birthdate": "johnsmith",
+ *        "avatar": false
+ *      }
+ *    }
+ *
+ * @apiError {json} ValidationError Validation failed for edit fileds
+ * @apiError {String} ValidationError.birthdate Birthdate validations
+ * @apiError {String} ValidationError.phone Phone validations
+ * @apiErrorExample {json} Validation Error
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "email": "Email is not valid",
+ *  "username": "Username must have at least 6 characters",
+ *  "password": "Password must have at least 6 characters",
+ *  "password2": "Full name field is required",
+ *  "birthdate": "Invalid birthdate, dates must be in the following format: YYYY-MM-DD",
+ *  "phone": "Invalid phone number"
+ *
+ * }
+ * @apiErrorExample {json} Internal Server Error
+ * HTTP/1.1 500 Internal Server Error
+ */
 router.put(
-  "/",
+  "/me",
   passport.authenticate("jwt", { session: false }),
   usersController.editCurrentUser
 );

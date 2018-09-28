@@ -11,15 +11,15 @@ const validateUser = user => {
     errors.email = "Email field is required";
   }
 
-  if (!validator.isLength(user.username + "", { min: 6, max: undefined })) {
-    errors.username = "Username must have at least 6 characters";
+  if (!validator.isLength(user.username + "", { min: 6, max: 24 })) {
+    errors.username = "Username must have between 6 and 24 characters";
   }
   if (validator.isEmpty(user.username + "")) {
     errors.username = "Username field is required";
   }
 
-  if (!validator.isLength(user.password, { min: 6, max: undefined })) {
-    errors.password = "Password must have at least 6 characters";
+  if (!validator.isLength(user.password, { min: 6, max: 24 })) {
+    errors.password = "Password must have between 6 and 24 characters";
   }
   if (validator.isEmpty(user.password + "")) {
     errors.password = "Password field is required";
