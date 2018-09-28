@@ -1133,12 +1133,12 @@
   },
   {
     "type": "DELETE",
-    "url": "/api/users/categories/:id",
+    "url": "/api/categories/:id",
     "title": "Deletes an specific category",
     "group": "Categories",
     "sampleRequest": [
       {
-        "url": "/api/users/categories/:id"
+        "url": "/api/categories/:id"
       }
     ],
     "permission": [
@@ -1275,7 +1275,7 @@
     "version": "0.0.0",
     "filename": "./routes/api/categories.js",
     "groupTitle": "Categories",
-    "name": "DeleteApiUsersCategoriesId"
+    "name": "DeleteApiCategoriesId"
   },
   {
     "type": "get",
@@ -1397,12 +1397,12 @@
   },
   {
     "type": "post",
-    "url": "/api/users/categories",
+    "url": "/api/categories",
     "title": "Create a new category",
     "group": "Categories",
     "sampleRequest": [
       {
-        "url": "/api/users/categories"
+        "url": "/api/categories"
       }
     ],
     "permission": [
@@ -1540,16 +1540,16 @@
     "version": "0.0.0",
     "filename": "./routes/api/categories.js",
     "groupTitle": "Categories",
-    "name": "PostApiUsersCategories"
+    "name": "PostApiCategories"
   },
   {
     "type": "PUT",
-    "url": "/api/users/categories/:id",
+    "url": "/api/categories/:id",
     "title": "Updates a category",
     "group": "Categories",
     "sampleRequest": [
       {
-        "url": "/api/users/categories/:id"
+        "url": "/api/categories/:id"
       }
     ],
     "permission": [
@@ -1702,6 +1702,6 @@
     "version": "0.0.0",
     "filename": "./routes/api/categories.js",
     "groupTitle": "Categories",
-    "name": "PutApiUsersCategoriesId"
+    "name": "PutApiCategoriesId"
   }
 ]

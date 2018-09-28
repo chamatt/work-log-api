@@ -4,7 +4,6 @@ const passport = require("passport");
 
 const { AdminAuthenticate } = require("../middlewares.js");
 const categoriesController = require("../../controllers/categoriesController");
-const validateCategory = require("../../validators/categories");
 
 /**
  * @api {get} /api/categories Get All Categories
@@ -50,9 +49,9 @@ router.get(
 );
 
 /**
- * @api {post} /api/users/categories Create a new category
+ * @api {post} /api/categories Create a new category
  * @apiGroup Categories
- * @apiSampleRequest /api/users/categories
+ * @apiSampleRequest /api/categories
  * @apiPermission Admin
  * @apiHeader {String} Authorization JWT Token
  *
@@ -104,9 +103,9 @@ router.post(
 );
 
 /**
- * @api {DELETE} /api/users/categories/:id Deletes an specific category
+ * @api {DELETE} /api/categories/:id Deletes an specific category
  * @apiGroup Categories
- * @apiSampleRequest /api/users/categories/:id
+ * @apiSampleRequest /api/categories/:id
  * @apiPermission Admin
  * @apiHeader {String} Authorization JWT Token
  *
@@ -156,9 +155,9 @@ router.delete(
 );
 
 /**
- * @api {PUT} /api/users/categories/:id Updates a category
+ * @api {PUT} /api/categories/:id Updates a category
  * @apiGroup Categories
- * @apiSampleRequest /api/users/categories/:id
+ * @apiSampleRequest /api/categories/:id
  * @apiPermission Admin
  * @apiHeader {String} Authorization JWT Token
  *
