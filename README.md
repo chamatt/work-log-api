@@ -23,7 +23,7 @@ Here are the routes available:
 - *User*
   - Create users (Admin and Public)
   - Login user (Public)
-  - Get Current User Info (Private
+  - Get Current User Info (Private)
   - Get All User Info (Admin)
   - Get Specific User Info (Admin)
   - Edit User (Private)
@@ -35,7 +35,7 @@ Here are the routes available:
 - *Activities*
   - Create a new activity (With description, date, duration, category) (Private)
   - Edit a activity (Private)
-  - Delete a activity(Private)
+  - Delete a activity (Private)
   - Get all activities from current user (Private)
   - Get activities from the last X days from current user (Private)
   - Get all activities from a specific user (Admin)
@@ -58,7 +58,8 @@ If you don't care about securing your keys, you can go to  ``./config/keys```, a
 
 ## Starting server
 
-To start the server, just type ```npm start```, the api will be running on [localhost:3001/](localhost:3001/)
+To start the server, just type ```npm start```, the api will be running on [localhost:3001/](localhost:3001/).
+For development, you can use ```npm run dev``` to start it with nodemon.
 
 ## Deploying for production
 
@@ -68,4 +69,4 @@ On Heroku, you can do this by following this tutorial: [Heroku Config Vars](http
 # Documentation
 
 You can read the *sample documentation* (Request examples don't work) at [Work Log API Docs](https://chamatt.github.io/work-log-api)
-To host you own (working) documentaion, run: ```npm run doc``` on the terminal, and go to [localhost:3001/docs](http://localhost:3001/docs) to read it.
+To host you own (working) documentaion, run: ```npm run doc``` to compile it, start the server with ````npm start```, and go to [localhost:3001/docs](http://localhost:3001/docs) to read it.
