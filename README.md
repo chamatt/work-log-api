@@ -52,7 +52,7 @@ export WORK_LOG_MONGO_URI=yourMongodbURI && export WORK_LOG_SECRET=secretkey
 ```
 On Windows, you can do that by typing this in cmd:
 ```
-export WORK_LOG_MONGO_URI=yourMongodbURI && export WORK_LOG_SECRET=secretkey
+set WORK_LOG_MONGO_URI=yourMongodbURI && set WORK_LOG_SECRET=secretkey
 ```
 If you don't care about securing your keys, you can go to  ``./config/keys```, and edit those variables right there.
 
