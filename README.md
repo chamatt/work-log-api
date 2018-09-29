@@ -1,7 +1,7 @@
 # Work Log API
 Work Log API is a REST API to log and track time spent at work
 
-# Description
+## Description
 
 The Work Log API can be use as a way to track what the workers in a company are doing during their work hours, it's useful in meetings, so you can always know what you have done in a specific day, or week, and how many hours you spend on a activity. It can help a lot with productivity.
 ## Authentication
@@ -43,7 +43,7 @@ Here are the routes available:
   
 # How to use
 
-## Set ENV variables
+## Setting ENV variables
 To use the api you need to set the MongoDB URI and the Secret Key (for authentication) ENV variables on you system
 
 On Linux and Mac, you can do that by typing this on the terminal:
