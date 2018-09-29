@@ -3,9 +3,9 @@ Work Log API is a REST API to log and track time spent at work
 
 # Description
 
-The Work Log API can be use as a way to track what the workers in a company are doing during their work hours, it's useful in meeting, so you can always know what you have done in a specific day, or week, and how many hours you spend on a activity. It can help a lot with productivity.
+The Work Log API can be use as a way to track what the workers in a company are doing during their work hours, it's useful in meetings, so you can always know what you have done in a specific day, or week, and how many hours you spend on a activity. It can help a lot with productivity.
 ## Authentication
-The API is authenticated by the use of JWT Tokens, for any non-public route, you have to send a authentication header with the Bearer token to user that route.
+The API is authenticated with the use of JWT Tokens, for any non-public route, you have to send a authentication header with the Bearer token to use that route.
 Example header:
 ```
 Authorization: Bearer eyJhbGciOiJIUzfFSDFsdfSDFSDFJ9.eyJpZCI6IjViYTUzMmIzZWM0YTNmNzY0ZDAyYjY2NSIsInVzZXJuYW1lIjoicGV0ZW5nY29tcCIsImVtYWlsIjoicGV0ZW5nY29tcC51ZmVzQGdtYWlsLmNvbSIsImFkbWluIjp0cnVlLCJpYfsDFDfdDFDmV4cCI6MTUzODI0NzgxM30.QNjQ3nmHNT78Xz-25nVfvTXT6SpJwpRy2dmyDqrnF8Y
@@ -58,7 +58,7 @@ If you don't care about securing your keys, you can go to  ``./config/keys```, a
 
 ## Starting server
 
-To start the server, just type ```npm start```, the server will be running on [localhost:3001/](localhost:3001/)
+To start the server, just type ```npm start```, the api will be running on [localhost:3001/](localhost:3001/)
 
 ## Deploying for production
 
