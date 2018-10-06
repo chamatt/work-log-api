@@ -33,7 +33,7 @@ exports.createUser = (req, res, admin) => {
       admin: admin
     });
     if (req.body.phone) newUser.phone = req.body.phone;
-
+    if (req.body.admin) newUser.validated = true;
     bcrypt
       .genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -82,7 +82,8 @@ exports.loginUser = (req, res) => {
             username: user.username,
             email: user.email,
             admin: user.admin,
-            avatar: user.avatar
+            avatar: user.avatar,
+            validated: user.validated
           }; // JWT Payload
           User.findOneAndUpdate(
             { $or: [{ email: username }, { username: username }] },
@@ -175,4 +176,17 @@ exports.editCurrentUser = (req, res) => {
     .catch(err =>
       res.status(400).json({ errors: { objectID: "ObjectID is not valid" } })
     );
+};
+
+exports.validateUser = (req, res) => {
+  User.findOneAndUpdate({ _id: req.params.id }, { $set: { validated: true } })
+    .then(user => {
+      if (!user) {
+        res.status(404).json({ errors: { notfound: "User not found" } });
+      }
+      res.json({ sucess: "true", action: "valildate" });
+    })
+    .catch(() => {
+      res.status(400).json({ errors: { objectID: "ObjectID is not valid" } });
+    });
 };

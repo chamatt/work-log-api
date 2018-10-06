@@ -42,6 +42,10 @@ const UserSchema = new Schema({
   phone: {
     type: String,
     default: "(99)99999-9999"
+  },
+  validated: {
+    type: Boolean,
+    default: false
   }
 });
 

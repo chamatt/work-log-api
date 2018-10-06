@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-const { AdminAuthenticate } = require("../middlewares.js");
+const { AdminAuthenticate, validateUser } = require("../middlewares.js");
 const usersController = require("../../controllers/usersController");
 
 /**
@@ -36,6 +36,8 @@ const usersController = require("../../controllers/usersController");
  * @apiSuccess {String} data.fullName Full name
  * @apiSuccess {String} data.email User email
  * @apiSuccess {String} data.username Username
+ * @apiSuccess {String} data.admin Admin permission
+ * @apiSuccess {String} data.validated Default to false, an admin needs to aprove registration for the account to be validated
  *
  *
  * @apiSuccessExample {json} Success
@@ -47,7 +49,8 @@ const usersController = require("../../controllers/usersController");
  *        "fullName": "John Smith",
  *        "email": "john.smith@gmail.com",
  *        "username": "johnsmith",
- *        "admin": false
+ *        "admin": false,
+ *        "validated": false
  *      }
  *    }
  *
@@ -105,7 +108,8 @@ router.post("/register", (req, res) => {
  * @apiSuccess {String} data.fullName Full name
  * @apiSuccess {String} data.email User email
  * @apiSuccess {String} data.username Username
- *
+ * @apiSuccess {String} data.admin Admin permission
+ * @apiSuccess {String} data.validated Default to true, an admin registration gets validated automatically
  *
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
@@ -116,7 +120,8 @@ router.post("/register", (req, res) => {
  *        "fullName": "John Smith",
  *        "email": "john.smith@gmail.com",
  *        "username": "johnsmith",
- *        "admin": true
+ *        "admin": true,
+ *        "validated": true,
  *      }
  *    }
  *
@@ -350,6 +355,7 @@ router.get(
  * @apiGroup 2 Users
  * @apiSampleRequest /api/users/me
  * @apiPermission Private
+ * @apiHeader {String} Authorization JWT Token
  * 
  * @apiParam (Request Body) {String} [fullName] Full Name
  * @apiParam (Request Body) {String} [birthdate] Birth Date (Format: YYYY-MM-DD)
@@ -369,12 +375,12 @@ router.get(
  * @apiSuccess {String} action Action performed
  * @apiSuccess {Object} data User data
  * @apiSuccess {String} data.fullName Full name
- * @apiSuccess {String} data.email User email
- * @apiSuccess {String} data.username Username
- *
+ * @apiSuccess {String} data.phone User phone
+ * @apiSuccess {String} data.birthdate User birthdate
+ * @apiSuccess {String} data.avatar User Avatar
  *
  * @apiSuccessExample {json} Success
- *    HTTP/1.1 201 Created
+ *    HTTP/1.1 200 OK
  *    {
  *      "success": "true",
  *      "action": "register",
@@ -382,12 +388,12 @@ router.get(
  *        "fullName": "John Smith",
  *        "phone": "john.smith@gmail.com",
  *        "birthdate": "johnsmith",
- *        "avatar": false
+ *        "avatar": "//apid/jonhthd324234234.jpg"
  *      }
  *    }
  *
- * @apiError 401 NotLoggedIn
- * @apiErrorExample {json} NotLoggedIn
+ * @apiError 401 AuthenticationError
+ * @apiErrorExample {json} AuthenticationError
  * HTTP/1.1 401 Unauthorized
  * 
  * @apiError {json} ValidationError Validation failed for edit fileds
@@ -396,13 +402,10 @@ router.get(
  * @apiErrorExample {json} Validation Error
  * HTTP/1.1 400 Bad Request
  * {
- *  "email": "Email is not valid",
- *  "username": "Username must have at least 6 characters",
- *  "password": "Password must have at least 6 characters",
- *  "password2": "Full name field is required",
  *  "birthdate": "Invalid birthdate, dates must be in the following format: YYYY-MM-DD",
- *  "phone": "Invalid phone number"
- *
+ *  "phone": "Invalid phone number",
+ *  "avatar": "Invalid avatar URL",
+ *  "fullname": "Full name field is required"
  * }
  * @apiErrorExample {json} Internal Server Error
  * HTTP/1.1 500 Internal Server Error
@@ -411,6 +414,51 @@ router.put(
   "/me",
   passport.authenticate("jwt", { session: false }),
   usersController.editCurrentUser
+);
+
+/**
+ * @api {PUT} /api/users/validate/:id Validate New User
+ * @apiGroup 2 Users
+ * @apiSampleRequest /api/users/validate/:id
+ * @apiPermission Admin
+ *
+ * @apiHeader {String} Authorization JWT Token
+ *
+ * @apiParam (URL Params) {String} id User ID
+ *
+ * @apiSuccess {Boolean} success Request Status
+ * @apiSuccess {String} action Action performed
+ *
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 201 Created
+ *    {
+ *      "success": "true",
+ *      "action": "validate",
+ *    }
+ *
+ * @apiError 401 NotLoggedIn
+ * @apiErrorExample {json} NotLoggedIn
+ * HTTP/1.1 401 Unauthorized
+ * @apiError 403 NotAdmin
+ * @apiErrorExample {json} NotAdmin
+ * HTTP/1.1 403 Forbidden
+ * @apiError 400 ObjectID Invalid
+ * @apiErrorExample {json} ObjectID Invalid
+ * HTTP/1.1 400 Bad Request
+ * { "errors": {"objectID": "ObjectID is not valid"} }
+ * @apiError 404 User not found
+ * @apiErrorExample {json} User Not Found
+ * HTTP/1.1 404 Not found
+ * { "errors": { "notfound": "User not found" } }
+ * @apiErrorExample {json} Internal Server Error
+ * HTTP/1.1 500 Internal Server Error
+ */
+router.put(
+  "/validate/:id",
+  passport.authenticate("jwt", { session: false }),
+  AdminAuthenticate,
+  usersController.validateUser
 );
 
 module.exports = router;
