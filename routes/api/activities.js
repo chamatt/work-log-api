@@ -156,9 +156,65 @@ router.get(
   (req, res) => activitiesController.getActivities(req, res, 10000)
 );
 
-// @route  POST api/activities
-// @desc   Create a new activity
-// @access Private
+/**
+ * @api {post} /api/activities/ Create a new activity
+ * @apiGroup Activities
+ * @apiSampleRequest /api/activities/
+ * @apiPermission Private
+ * @apiHeader {String} Authorization JWT Token
+ *
+ * @apiParam (Request Body) {String} date Date when activity was done (Format: YYYY-MM-DD)
+ * @apiParam (Request Body) {String} length Length of the activity (Format: HH-mm)
+ * @apiParam (Request Body) {String[]} category List of object ids of the categories that the activity fits in
+ * @apiParam (Request Body) {String} description A small text describing the activity
+ 
+ * @apiSuccess {Boolean} success Request Status
+ * @apiSuccess {String} action Action performed
+ * @apiSuccess {Object[]} data Category data
+ * @apiSuccess {String} data.length Length of created activity
+ * @apiSuccess {String[]} data.category List of categories of created activity
+ * @apiSuccess {String} data.date Date of created activity
+ * @apiSuccess {String} data.description Description of created activity
+ *
+ *@apiParamExample {json} Input
+ *  {
+ *         "category": ["5ba44feca2504832a88c1edf","5ba44ffda2504832a88c1ee0"],
+ *         "_id": "5ba941ed77993b6aacdc4e7e",
+ *         "date": "2018-09-23",
+ *         "length": "03:00",
+ *         "description": "Did some things",
+ *         "user": "5ba532b3ec4a3f764d02b665",
+ *         "__v": 0
+ *   }
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *  {
+ *     "data":
+ *       {
+ *         "category": ["5ba44feca2504832a88c1edf","5ba44ffda2504832a88c1ee0"],
+ *         "_id": "5ba941ed77993b6aacdc4e7e",
+ *         "date": "2018-09-23T03:00:00.000Z",
+ *         "length": "2018-09-24T03:01:00.000Z",
+ *         "description": "Did some things",
+ *         "user": "5ba532b3ec4a3f764d02b665",
+ *         "__v": 0
+ *       }
+ *   }
+ *
+ *
+ * @apiError 401 NotLoggedIn
+ * @apiErrorExample {json} NotLoggedIn
+ * HTTP/1.1 401 Unauthorized
+ * 
+ * @apiError CantSaveActivity Unable to save actitity
+ * @apiErrorExample {json} CantSaveActivity
+ * HTTP/1.1 400 CantSaveActivity
+ * { errors: {cantsave: "Can't save activity" }}
+ *
+ * @apiErrorExample {json} Internal Server Error
+ * HTTP/1.1 500 Internal Server Error
+ */
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),

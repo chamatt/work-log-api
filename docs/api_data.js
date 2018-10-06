@@ -2144,6 +2144,177 @@ define({ "api": [
     "name": "GetApiActivitiesUsersUseridDays"
   },
   {
+    "type": "post",
+    "url": "/api/activities/",
+    "title": "Create a new activity",
+    "group": "Activities",
+    "sampleRequest": [
+      {
+        "url": "/api/activities/"
+      }
+    ],
+    "permission": [
+      {
+        "name": "Private"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Request Body": [
+          {
+            "group": "Request Body",
+            "type": "String",
+            "optional": false,
+            "field": "date",
+            "description": "<p>Date when activity was done (Format: YYYY-MM-DD)</p>"
+          },
+          {
+            "group": "Request Body",
+            "type": "String",
+            "optional": false,
+            "field": "length",
+            "description": "<p>Length of the activity (Format: HH-mm)</p>"
+          },
+          {
+            "group": "Request Body",
+            "type": "String[]",
+            "optional": false,
+            "field": "category",
+            "description": "<p>List of object ids of the categories that the activity fits in</p>"
+          },
+          {
+            "group": "Request Body",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>A small text describing the activity</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n       \"category\": [\"5ba44feca2504832a88c1edf\",\"5ba44ffda2504832a88c1ee0\"],\n       \"_id\": \"5ba941ed77993b6aacdc4e7e\",\n       \"date\": \"2018-09-23\",\n       \"length\": \"03:00\",\n       \"description\": \"Did some things\",\n       \"user\": \"5ba532b3ec4a3f764d02b665\",\n       \"__v\": 0\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Request Status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "action",
+            "description": "<p>Action performed</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Category data</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.length",
+            "description": "<p>Length of created activity</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String[]",
+            "optional": false,
+            "field": "data.category",
+            "description": "<p>List of categories of created activity</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.date",
+            "description": "<p>Date of created activity</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.description",
+            "description": "<p>Description of created activity</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "  HTTP/1.1 200 OK\n{\n   \"data\":\n     {\n       \"category\": [\"5ba44feca2504832a88c1edf\",\"5ba44ffda2504832a88c1ee0\"],\n       \"_id\": \"5ba941ed77993b6aacdc4e7e\",\n       \"date\": \"2018-09-23T03:00:00.000Z\",\n       \"length\": \"2018-09-24T03:01:00.000Z\",\n       \"description\": \"Did some things\",\n       \"user\": \"5ba532b3ec4a3f764d02b665\",\n       \"__v\": 0\n     }\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "401",
+            "description": "<p>NotLoggedIn</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "CantSaveActivity",
+            "description": "<p>Unable to save actitity</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "NotLoggedIn",
+          "content": "HTTP/1.1 401 Unauthorized",
+          "type": "json"
+        },
+        {
+          "title": "CantSaveActivity",
+          "content": "HTTP/1.1 400 CantSaveActivity\n{ errors: {cantsave: \"Can't save activity\" }}",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./routes/api/activities.js",
+    "groupTitle": "Activities",
+    "name": "PostApiActivities"
+  },
+  {
     "success": {
       "fields": {
         "Success 200": [

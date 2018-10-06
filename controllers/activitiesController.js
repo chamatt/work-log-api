@@ -41,8 +41,8 @@ exports.createActivity = (req, res) => {
   const id = req.user.id;
 
   const activity = new Activity({
-    date: moment(req.body.date, "YYYY-MM-DD"),
-    length: moment(req.body.length, "HH-mm"),
+    date: moment.utc(req.body.date, "YYYY-MM-DD"),
+    length: moment.utc(req.body.length, "HH:mm"),
     category: req.body.category,
     description: req.body.description,
     user: req.user.id
@@ -51,16 +51,24 @@ exports.createActivity = (req, res) => {
   activity
     .save()
     .then(() => {
-      res.json({ success: true });
+      res.json({
+        success: true,
+        action: "create",
+        data: {
+          ...activity._doc
+        }
+      });
     })
-    .catch(err => res.status(400).json({ errors: "Can't save activity" }));
+    .catch(err =>
+      res.status(400).json({ errors: { cantsave: "Can't save activity" } })
+    );
 };
 
 exports.editActivity = (req, res) => {
   const { name, category, date, length, description } = req.body;
   Activity.findOne({ _id: req.params.id }).then(activity => {
     if (activity.user._id + "" !== req.user._id + "") {
-      console.log("ocaralho", activity.user._id, req.user._id);
+      // console.log("ocaralho", activity.user._id, req.user._id);
       return res.status(403).json({
         errors: "You do not have permission to edit someone else's activity"
       });
