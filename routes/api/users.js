@@ -2,6 +2,11 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
+// Multipart form data handler middleware
+var multer = require("multer");
+var upload = multer({ dest: "uploads/" });
+const autoReap = require("multer-autoreap");
+
 const { AdminAuthenticate, validateUser } = require("../middlewares.js");
 const usersController = require("../../controllers/usersController");
 
@@ -298,56 +303,12 @@ router.get(
   usersController.getAllUsers
 );
 
-/**
- * @api {get} /api/users/:id Get User By Id
- * @apiGroup 2 Users
- * @apiPermission Admin
- * @apiHeader {String} Authorization JWT Token
- * @apiSampleRequest /api/users/:id
- * @apiParam (URL Params) {String} id User id (Required)
- *
- * @apiSuccess {Boolean} success Request Status
- * @apiSuccess {String} action Action performed
- * @apiSuccess {Object} data
- *
- * @apiSuccess {String} data._id Id
- * @apiSuccess {String} data.fullName Full Name
- * @apiSuccess {String} data.email Email
- * @apiSuccess {String} data.username Username
- * @apiSuccess {Date} data.birthdate Date of birth (YYYY-MM-DD)
- * @apiSuccess {String} data.phone Phone number
- * @apiSuccess {Date} data.createdAt Date of account creation
- * @apiSuccess {Date} data.loggedAt Last login
- *
- *
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *    {
- *      "success": true,
- *      "action": "get",
- *      "data": {
- *        "admin": false,
- *        "phone": "27994949993",
- *        "_id": "5bae651e6866f10015d2b128",
- *        "fullName": "John Smith",
- *        "email": "john.smith@gmail.com",
- *        "username": "johnsmith",
- *        "birthdate": "2000-12-01T00:00:00.000Z",
- *        "createdAt": "2018-09-28T17:30:06.905Z",
- *        "loggedAt": "2018-09-28T17:30:06.905Z",
- *      }
- *    }
- *
- * @apiErrorExample {json} Not Logged In
- * HTTP/1.1 401 Unauthorized
- * @apiErrorExample {json} Not an Admin
- * HTTP/1.1 403 Forbidden
- */
-router.get(
-  "/:id",
+router.post(
+  "/avatar",
   passport.authenticate("jwt", { session: false }),
-  AdminAuthenticate,
-  usersController.getUserById
+  upload.single("avatar"),
+  autoReap,
+  usersController.uploadAvatar
 );
 
 /**
@@ -459,6 +420,58 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   AdminAuthenticate,
   usersController.validateUser
+);
+
+/**
+ * @api {get} /api/users/:id Get User By Id
+ * @apiGroup 2 Users
+ * @apiPermission Admin
+ * @apiHeader {String} Authorization JWT Token
+ * @apiSampleRequest /api/users/:id
+ * @apiParam (URL Params) {String} id User id (Required)
+ *
+ * @apiSuccess {Boolean} success Request Status
+ * @apiSuccess {String} action Action performed
+ * @apiSuccess {Object} data
+ *
+ * @apiSuccess {String} data._id Id
+ * @apiSuccess {String} data.fullName Full Name
+ * @apiSuccess {String} data.email Email
+ * @apiSuccess {String} data.username Username
+ * @apiSuccess {Date} data.birthdate Date of birth (YYYY-MM-DD)
+ * @apiSuccess {String} data.phone Phone number
+ * @apiSuccess {Date} data.createdAt Date of account creation
+ * @apiSuccess {Date} data.loggedAt Last login
+ *
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "success": true,
+ *      "action": "get",
+ *      "data": {
+ *        "admin": false,
+ *        "phone": "27994949993",
+ *        "_id": "5bae651e6866f10015d2b128",
+ *        "fullName": "John Smith",
+ *        "email": "john.smith@gmail.com",
+ *        "username": "johnsmith",
+ *        "birthdate": "2000-12-01T00:00:00.000Z",
+ *        "createdAt": "2018-09-28T17:30:06.905Z",
+ *        "loggedAt": "2018-09-28T17:30:06.905Z",
+ *      }
+ *    }
+ *
+ * @apiErrorExample {json} Not Logged In
+ * HTTP/1.1 401 Unauthorized
+ * @apiErrorExample {json} Not an Admin
+ * HTTP/1.1 403 Forbidden
+ */
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  AdminAuthenticate,
+  usersController.getUserById
 );
 
 module.exports = router;

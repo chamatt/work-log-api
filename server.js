@@ -20,6 +20,7 @@ app.use(function(req, res, next) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan("combined"));
+//app.use(express.static(__dirname + "/public"));
 
 // DB Config and Connection
 const db = require("./config/keys").mongoURI;

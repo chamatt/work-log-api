@@ -3,6 +3,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const moment = require("moment");
+const fs = require("fs");
+
+// Image upload
+var cloudinary = require("cloudinary");
+cloudinary.config(keys.cloudinary_config);
 
 const utils = require("../routes/utils");
 const validateLogin = require("../validators/login");
@@ -83,6 +88,7 @@ exports.loginUser = (req, res) => {
             email: user.email,
             admin: user.admin,
             avatar: user.avatar,
+            avatarId: user.avatarId,
             validated: user.validated
           }; // JWT Payload
           User.findOneAndUpdate(
@@ -121,7 +127,9 @@ exports.getCurrentUser = (req, res) => {
       username: req.user.username,
       email: req.user.email,
       admin: req.user.admin,
-      avatar: req.user.avatar
+      avatar: req.user.avatar,
+      avatarId: req.user.avatarId,
+      validated: req.user.validated
     }
   });
 };
@@ -189,4 +197,67 @@ exports.validateUser = (req, res) => {
     .catch(() => {
       res.status(400).json({ errors: { objectID: "ObjectID is not valid" } });
     });
+};
+
+exports.uploadAvatar = (req, res) => {
+  User.findById(req.user.id)
+    .then(user => {
+      if (user.avatarId) {
+        cloudinary.v2.uploader.destroy(user.avatarId, function(err, result) {
+          if (err)
+            res
+              .status(400)
+              .json({ errors: { uploadfailed: "Failed uploading avatar" } });
+          User.findOneAndUpdate(
+            { _id: user._id },
+            { $set: { avatar: "", avatarId: "" } }
+          ).catch(() =>
+            res
+              .status(400)
+              .json({ errors: { uploadfailed: "Failed uploading avatar" } })
+          );
+        });
+      }
+
+      cloudinary.v2.uploader.upload(
+        req.file.path,
+        {
+          folder: "work_log",
+          transformation: ["avatar_image"]
+        },
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            res
+              .status(400)
+              .json({ errors: { uploadfailed: "Failed uploading avatar" } });
+          }
+          console.log(result);
+          User.findOneAndUpdate(
+            { _id: user._id },
+            { $set: { avatar: result.url, avatarId: result.public_id } }
+          )
+            .then(() => {
+              res.json({
+                success: true,
+                action: "upload",
+                data: {
+                  avatar: result.url,
+                  avatarId: result.public_id
+                }
+              });
+            })
+            .catch(() =>
+              res.status(400).json({
+                errors: { uploadfailed: "Failed uploading avatar" }
+              })
+            );
+        }
+      );
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
+  //res.json(req.file);
 };
