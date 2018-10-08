@@ -27,6 +27,7 @@ Here are the routes available:
   - Get All User Info (Admin)
   - Get Specific User Info (Admin)
   - Edit User (Private)
+  - Upload Avatar Image (Private)
 - *Categories*
   - Create a new category (Admin)
   - Get all categories (Admin and Private)
@@ -55,6 +56,23 @@ On Windows, you can do that by typing this in cmd:
 set WORK_LOG_MONGO_URI=yourMongodbURI && set WORK_LOG_SECRET=secretkey
 ```
 If you don't care about securing your keys, you can go to  ``./config/keys```, and edit those variables right there.
+
+## Setting Cloudinary API Keys
+
+This API uses Cloudinary to upload avatar images to the cloud. If you want to use Avatar images in your application, you have to setup a [Cloudinary](https://cloudinary.com/) account (It has a decent free plan), get your credentials on the [dashboard](https://cloudinary.com/console) and set your enviroment variables as described below. If you don't want to use Cloudinary, you have to modify the ```uploadAvatar``` controller to handle image upload on your own. (Notice that all image uploads go to /uploads folder before going to the cloud, and are deleted after the upload request is done)
+
+On Linux and Mac, you can setup Cloudinary credentials by typing this on the terminal:
+```
+export WORK_LOG_IMAGE_CLOUDNAME=yourCloudinaryClouName &
+export WORK_LOG_IMAGE_API_SECRET=yourCloudinaryAPIKey &
+export WORK_LOG_IMAGE_API_KEY=yourCloudinaryAPISecret &
+```
+On Windows, you can do that by typing this in cmd:
+```
+set WORK_LOG_IMAGE_CLOUDNAME=yourCloudinaryClouName &
+set WORK_LOG_IMAGE_API_SECRET=yourCloudinaryAPIKey &
+set WORK_LOG_IMAGE_API_KEY=yourCloudinaryAPISecret &
+```
 
 ## Starting server
 
