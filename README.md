@@ -87,4 +87,4 @@ On Heroku, you can do this by following this tutorial: [Heroku Config Vars](http
 # Documentation
 
 You can read the *sample documentation* (Request examples don't work) at [Work Log API Docs](https://chamatt.github.io/work-log-api)
-To host you own (working) documentaion, run: ```npm run doc``` to compile it, start the server with ````npm start```, and go to [localhost:3001/docs](http://localhost:3001/docs) to read it.
+To host you own (working) documentaion, run: ```npm run doc``` to compile it, start the server with ```npm start```, and go to [localhost:3001/docs](http://localhost:3001/docs) to read it.
