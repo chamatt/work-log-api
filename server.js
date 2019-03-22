@@ -4,10 +4,13 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const app = express();
 const morgan = require("morgan");
+const cors = require("cors");
 
 const users = require("./routes/api/users");
 const activities = require("./routes/api/activities");
 const categories = require("./routes/api/categories");
+
+app.use(cors());
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
