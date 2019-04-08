@@ -255,7 +255,7 @@ router.get(
 /**
  * @api {get} /api/users/all Get All Users
  * @apiGroup 2 Users
- * @apiPermission Admin
+ * @apiPermission Private
  * @apiHeader {String} Authorization JWT Token
  * @apiSampleRequest /api/users/all
  * @apiSuccess {Boolean} success Request Status
@@ -299,7 +299,7 @@ router.get(
 router.get(
   "/all",
   passport.authenticate("jwt", { session: false }),
-  AdminAuthenticate,
+//   AdminAuthenticate,
   usersController.getAllUsers
 );
 
