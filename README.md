@@ -24,7 +24,7 @@ Here are the routes available:
   - Create users (Admin and Public)
   - Login user (Public)
   - Get Current User Info (Private)
-  - Get All User Info (Admin)
+  - Get All User Info (Private)
   - Get Specific User Info (Admin)
   - Edit User (Private)
   - Upload Avatar Image (Private)
